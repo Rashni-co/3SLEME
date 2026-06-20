@@ -45,10 +45,7 @@ export default function Register() {
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
             const user = userCredential.user;
 
-            // 2. Send Verification Email
-            await sendEmailVerification(user);
-
-            // 3. Create Firestore Document
+            // 2. Create Firestore Document
             const role = formData.adminCode === 'admin123' ? 'admin' : 'officer';
 
             await setDoc(doc(db, "users", user.uid), {
@@ -61,6 +58,9 @@ export default function Register() {
                 role: role,
                 createdAt: serverTimestamp()
             });
+
+            // 3. Send Verification Email
+            await sendEmailVerification(user);
 
             alert(`Registration successful! You are registered as an ${role.toUpperCase()}.`);
             navigate('/login');
